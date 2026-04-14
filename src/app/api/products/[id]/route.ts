@@ -1,8 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
 
-export async function GET(request, { params }) {
+export const dynamic = 'force-dynamic';
+
+export async function GET(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
     await dbConnect();
     
     const { id } = params;
@@ -18,7 +23,10 @@ export async function GET(request, { params }) {
     }
 }
 
-export async function PUT(request, { params }) {
+export async function PUT(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
     await dbConnect();
     
     const { id } = params;

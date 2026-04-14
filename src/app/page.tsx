@@ -9,12 +9,10 @@ import {
   Droplet, Wheat, Cookie, Flame, Star, ShoppingBag, CheckCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useCart } from '@/contexts/CartContext';
 
 const HomePage = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -340,7 +338,7 @@ const HomePage = () => {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <ProductCard product={product} onAddToCart={addToCart} />
+                  <ProductCard product={product} />
                 </motion.div>
               ))}
             </div>
