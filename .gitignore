@@ -1,5 +1,16 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# internal guides (may contain sensitive info)
+PRODUCTION_USAGE_GUIDE.md
+SETUP_GUIDE.md
+QUICKSTART.md
+GHEE_BUSINESS_UPDATES.md
+COMPLETION_SUMMARY.md
+IMPLEMENTATION_COMPLETE.md
+REDESIGN_COMPLETE.md
+RAZORPAY_COMPLETE_GUIDE.md
+VERCEL_DEPLOYMENT_GUIDE.md
+
 # dependencies
 /node_modules
 /.pnp
