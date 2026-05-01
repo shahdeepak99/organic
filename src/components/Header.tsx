@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Menu, X, Leaf, Sparkles, User } from 'lucide-react';
+import { ShoppingCart, Menu, X, Leaf, Sparkles } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,7 +22,6 @@ const Header: React.FC = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/products', label: 'Products' },
-    { href: '/about', label: 'About Us' },
   ];
 
   return (
@@ -60,10 +59,10 @@ const Header: React.FC = () => {
             </motion.div>
             <div>
               <h1 className="text-2xl font-display font-bold text-gray-900 group-hover:text-primary-600 transition">
-                Pure Ghee
+                Pavanam
               </h1>
               <p className="text-xs text-primary-600 font-medium tracking-wide">
-                Authentic Traditional Ghee
+                Pure Organic Foods
               </p>
             </div>
           </Link>
@@ -108,14 +107,6 @@ const Header: React.FC = () => {
               <span className="ml-2">Cart</span>
             </Link>
 
-            {/* Admin Button */}
-            <Link
-              href="/admin"
-              className="flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-2.5 rounded-lg hover:from-primary-700 hover:to-primary-800 transition-all font-medium shadow-md hover:shadow-lg btn-primary-hover"
-            >
-              <User className="w-4 h-4" />
-              Admin
-            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -173,20 +164,6 @@ const Header: React.FC = () => {
                       {cartCount}
                     </span>
                   )}
-                </Link>
-              </motion.div>
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Link
-                  href="/admin"
-                  className="flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 py-2.5 rounded-lg hover:from-primary-700 hover:to-primary-800 transition-all font-medium text-center justify-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <User className="w-4 h-4" />
-                  Admin Panel
                 </Link>
               </motion.div>
             </motion.nav>

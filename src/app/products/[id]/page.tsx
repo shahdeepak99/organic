@@ -1,20 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Product } from '@/types';
 import { ShoppingCart, ArrowLeft, Star, Package, Shield, Truck, Leaf } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
 
 const ProductDetailPage = () => {
   const params = useParams();
-  const router = useRouter();
   const id = params?.id as string;
   
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -38,22 +37,7 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    
-    const existingCart = localStorage.getItem('cart');
-    const cart = existingCart ? JSON.parse(existingCart) : [];
-    
-    const existingItemIndex = cart.findIndex((item: any) => item.product._id === product._id);
-    
-    if (existingItemIndex > -1) {
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      cart.push({ product, quantity });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    setAddedToCart(true);
-    
-    setTimeout(() => setAddedToCart(false), 3000);
+    addToCart(product, 1);
   };
 
   if (loading) {
@@ -102,12 +86,12 @@ const ProductDetailPage = () => {
 
         <div className="grid lg:grid-cols-2 gap-12 mb-12">
           {/* Product Image */}
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden p-8">
-            <div className="relative">
+          <div className={`rounded-2xl shadow-lg overflow-hidden p-8 flex items-center justify-center bg-gradient-to-br ${product.category?.toLowerCase().includes('buffalo') ? 'from-sky-50 via-slate-50 to-blue-50' : 'from-amber-50 via-cream-100 to-primary-50'}`}>
+            <div className="relative w-full">
               <img
-                src={product.imageUrl || '/assets/placeholder.jpg'}
+                src={product.imageUrl || '/banner.jpg'}
                 alt={product.name}
-                className="w-full h-96 object-cover rounded-xl"
+                className="w-full h-96 object-contain rounded-xl drop-shadow-lg"
               />
               {product.featured && (
                 <div className="absolute top-4 right-4 bg-gradient-to-r from-gold-400 to-gold-600 text-white px-4 py-2 rounded-full font-semibold text-sm flex items-center gap-1">
@@ -161,62 +145,15 @@ const ProductDetailPage = () => {
                 ))}
               </div>
 
-              {/* Stock Status */}
-              <div className="mb-6">
-                {product.stock > 10 ? (
-                  <span className="text-accent-600 font-semibold flex items-center gap-2">
-                    <span className="w-2 h-2 bg-accent-600 rounded-full animate-pulse"></span>
-                    In Stock ({product.stock} available)
-                  </span>
-                ) : product.stock > 0 ? (
-                  <span className="text-amber-600 font-semibold flex items-center gap-2">
-                    <span className="w-2 h-2 bg-amber-600 rounded-full animate-pulse"></span>
-                    Only {product.stock} left!
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-semibold">Out of Stock</span>
-                )}
-              </div>
-
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-4 mb-6">
-                <label className="font-semibold text-gray-700">Quantity:</label>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-full bg-primary-100 text-primary-700 hover:bg-primary-200 transition font-bold"
-                  >
-                    -
-                  </button>
-                  <span className="w-16 text-center font-bold text-lg">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    disabled={quantity >= product.stock}
-                    className="w-10 h-10 rounded-full bg-primary-100 text-primary-700 hover:bg-primary-200 transition font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
               {/* Add to Cart Button */}
-              <div className="flex gap-4">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white py-4 rounded-lg font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  {addedToCart ? 'Added to Cart!' : 'Add to Cart'}
-                </button>
-                
-                <Link
-                  href="/cart"
-                  className="px-6 py-4 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
-                >
-                  View Cart
-                </Link>
-              </div>
+              <button
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white py-4 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+              </button>
             </div>
           </div>
         </div>

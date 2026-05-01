@@ -188,13 +188,15 @@ const CheckoutPage = () => {
     const orderData = {
       user: formData,
       items: cart.map(item => ({
-        product: item._id,
+        productId: item._id,
         name: item.name,
         quantity: item.quantity,
-        price: item.discount > 0 ? item.price * (1 - item.discount / 100) : item.price,
+        price: item.discount > 0 ? Math.round(item.price * (1 - item.discount / 100)) : item.price,
+        imageUrl: item.imageUrl || '',
       })),
       totalAmount: total,
-      paymentMethod: paymentMethod,
+      paymentMethod: paymentMethod === 'razorpay' ? 'card' : 'cod',
+      paymentStatus: paymentMethod === 'razorpay' ? 'paid' : 'pending',
       paymentDetails: paymentDetails || null,
       shippingAddress: {
         address: formData.address,
@@ -214,8 +216,7 @@ const CheckoutPage = () => {
     const data = await response.json();
     if (data.success) {
       clearCart();
-      alert(`Order placed successfully! ${paymentMethod === 'razorpay' ? 'Payment ID: ' + paymentDetails?.razorpay_payment_id : 'Cash on Delivery'}`);
-      router.push('/');
+      router.push('/checkout/success');
     } else {
       throw new Error(data.error || 'Failed to place order');
     }

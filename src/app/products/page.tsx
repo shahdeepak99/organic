@@ -14,10 +14,8 @@ const ProductsPage = () => {
 
   const categories = [
     { value: 'all', label: 'All Products' },
-    { value: 'ghee', label: 'Pure Ghee' },
-    { value: 'gud', label: 'Jaggery (Gud)' },
-    { value: 'pulses', label: 'Organic Pulses' },
-    { value: 'oils', label: 'Cold-Pressed Oils' },
+    { value: 'Cow Ghee', label: 'Cow Ghee' },
+    { value: 'Buffalo Ghee', label: 'Buffalo Ghee' },
   ];
 
   useEffect(() => {
@@ -33,7 +31,11 @@ const ProductsPage = () => {
       const response = await fetch('/api/products');
       const data = await response.json();
       if (data.success) {
-        setProducts(data.data);
+        const sorted = [...data.data].sort((a, b) => {
+          const order = (cat: string) => cat.toLowerCase().includes('buffalo') ? 1 : 0;
+          return order(a.category) - order(b.category);
+        });
+        setProducts(sorted);
       }
     } catch (error) {
       console.error('Error fetching products:', error);

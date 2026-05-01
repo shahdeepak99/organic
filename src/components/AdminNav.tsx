@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, ShoppingBag, BarChart3 } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { LayoutDashboard, Package, ShoppingBag, LogOut } from 'lucide-react';
 
 const AdminNav = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -13,14 +14,20 @@ const AdminNav = () => {
     { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   ];
 
+  const handleLogout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    router.push('/admin/login');
+    router.refresh();
+  };
+
   return (
     <nav className="bg-white shadow-md border-b border-gray-200">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 flex items-center justify-between">
         <ul className="flex space-x-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
-            
+
             return (
               <li key={item.href}>
                 <Link
@@ -41,6 +48,14 @@ const AdminNav = () => {
             );
           })}
         </ul>
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 font-medium transition px-3 py-2 rounded-lg hover:bg-red-50"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </button>
       </div>
     </nav>
   );

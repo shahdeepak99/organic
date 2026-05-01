@@ -20,10 +20,14 @@ const HomePage = () => {
 
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await fetch('/api/products?featured=true');
+      const response = await fetch('/api/products');
       const data = await response.json();
       if (data.success) {
-        setFeaturedProducts(data.data.slice(0, 6));
+        const sorted = [...data.data].sort((a, b) => {
+          const order = (cat: string) => cat.toLowerCase().includes('buffalo') ? 1 : 0;
+          return order(a.category) - order(b.category);
+        });
+        setFeaturedProducts(sorted);
       }
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -89,22 +93,22 @@ const HomePage = () => {
 
   const testimonials = [
     {
-      name: 'Priya Sharma',
-      location: 'Mumbai',
+      name: 'Amit Thareja',
+      location: 'Dwarka',
       rating: 5,
       text: 'The A2 ghee is absolutely pure! The golden color and aroma remind me of my grandmother\'s homemade ghee. My family loves it!',
-      avatar: '👩',
+      avatar: '👨',
     },
     {
-      name: 'Raj Patel',
-      location: 'Ahmedabad',
+      name: 'Rahul Sharma',
+      location: 'Sonipat',
       rating: 5,
       text: 'Best ghee I\'ve purchased online. The traditional bilona method makes all the difference. Perfect for our daily cooking and sweets!',
       avatar: '👨',
     },
     {
-      name: 'Sneha Reddy',
-      location: 'Bangalore',
+      name: 'Jyoti Bhardwaj',
+      location: 'Delhi',
       rating: 5,
       text: 'Using this desi cow ghee for my baby\'s food. The purity and quality give me complete peace of mind. Highly recommend!',
       avatar: '👩',
@@ -142,19 +146,19 @@ const HomePage = () => {
               >
                 <Sparkles className="w-4 h-4 text-gold-500" />
                 <span className="text-sm font-semibold text-gray-700">
-                  100% Certified Organic
+                  Made the Old Way. Loved Every Day.
                 </span>
               </motion.div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-gray-900 leading-tight">
-                Pure Desi Ghee
-                <span className="block gradient-text mt-2">Golden Purity</span>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-900 leading-tight">
+                The Ghee Your
+                <span className="block gradient-text mt-2">Family Deserves</span>
               </h1>
 
               <p className="text-xl text-gray-600 leading-relaxed max-w-xl">
-                Experience authentic A2 desi cow ghee made using traditional bilona method. 
-                Hand-churned from grass-fed cows, rich in nutrients, and full of natural goodness. 
-                The way our ancestors made it.
+                Crafted from the milk of grass-fed desi cows and farm-fresh buffalo using the 
+                ancient bilona hand-churning tradition — slow, pure, and deeply nourishing. 
+                No shortcuts, no additives. Just ghee the way it was always meant to be.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -167,16 +171,6 @@ const HomePage = () => {
                     <ShoppingBag className="w-5 h-5" />
                     Shop Now
                     <ArrowRight className="w-5 h-5" />
-                  </motion.button>
-                </Link>
-                <Link href="/products?featured=true">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-center gap-2 bg-white text-primary-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all border-2 border-primary-600 shadow-md"
-                  >
-                    <Star className="w-5 h-5" />
-                    Featured Products
                   </motion.button>
                 </Link>
               </div>
@@ -206,7 +200,7 @@ const HomePage = () => {
             >
               <div className="relative rounded-3xl shadow-2xl overflow-hidden premium-card">
                 <img
-                  src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=800&q=80"
+                  src="/banner2.jpg"
                   alt="Pure A2 Desi Cow Ghee - Traditional Bilona Method"
                   className="object-cover w-full h-96 lg:h-[600px]"
                 />
@@ -277,34 +271,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-primary-50 via-amber-50 to-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center p-6 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all premium-card"
-              >
-                <motion.div
-                  className={`w-14 h-14 ${feature.color} bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4`}
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <feature.icon className={`w-7 h-7 ${feature.color}`} />
-                </motion.div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h3>
-                <p className="text-sm text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Featured Products */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -318,7 +284,7 @@ const HomePage = () => {
               Our Premium <span className="gradient-text">Ghee Collection</span>
             </motion.h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose from our range of pure, authentic desi cow ghee
+              Pure cow & buffalo ghee, made the traditional way — pick the size that fits your home.
             </p>
           </div>
 
@@ -382,16 +348,16 @@ const HomePage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all premium-card"
+                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all premium-card flex flex-col h-full"
               >
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 fill-gold-400 text-gold-400" />
                   ))}
                 </div>
-                <p className="text-gray-700 mb-6 italic">"{testimonial.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">{testimonial.avatar}</div>
+                <p className="text-gray-700 mb-6 italic flex-1">"{testimonial.text}"</p>
+                <div className="flex items-center gap-3 mt-auto">
+                  <div className="text-3xl w-10 h-10 flex items-center justify-center flex-shrink-0">{testimonial.avatar}</div>
                   <div>
                     <p className="font-bold text-gray-900">{testimonial.name}</p>
                     <p className="text-sm text-gray-500">{testimonial.location}</p>

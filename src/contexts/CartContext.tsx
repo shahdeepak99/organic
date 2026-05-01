@@ -60,30 +60,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item._id === product._id);
-      
+
       if (existingItem) {
         const newQuantity = existingItem.quantity + quantity;
-        
         if (newQuantity > product.stock) {
-          toast.error(`Only ${product.stock} items available in stock`);
           return prevCart;
         }
-        
-        toast.success('Cart updated!');
         return prevCart.map((item) =>
-          item._id === product._id
-            ? { ...item, quantity: newQuantity }
-            : item
+          item._id === product._id ? { ...item, quantity: newQuantity } : item
         );
       } else {
         if (quantity > product.stock) {
-          toast.error(`Only ${product.stock} items available in stock`);
           return prevCart;
         }
-        
-        toast.success('Added to cart!');
         return [...prevCart, { ...product, quantity }];
       }
+    });
+
+    // Toast outside setCart so it never fires twice in StrictMode
+    toast.success('Added to cart!', {
+      style: { borderRadius: '12px', background: '#7d9374', color: '#fff' },
     });
   };
 
