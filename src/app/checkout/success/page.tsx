@@ -1,11 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { CheckCircle, ShoppingBag, Home } from 'lucide-react';
+import { CheckCircle, ShoppingBag, Home, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'next/navigation';
 
-export default function OrderSuccessPage() {
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get('orderId');
+  const shortId = orderId ? orderId.slice(-8).toUpperCase() : null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-amber-50 to-cream-100 flex items-center justify-center px-4 pt-20">
       <motion.div
@@ -24,12 +29,24 @@ export default function OrderSuccessPage() {
         </motion.div>
 
         <h1 className="text-3xl font-display font-bold text-gray-900 mb-3">
-          Order Placed!
+          Payment Successful!
         </h1>
-        <p className="text-gray-500 mb-8 leading-relaxed">
-          Thank you for your order. We've received it and will dispatch within 24 hours. 
-          You'll receive a confirmation shortly.
+
+        {shortId && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-3 mb-4">
+            <p className="text-xs text-amber-700 font-semibold uppercase tracking-wider mb-1">Order ID</p>
+            <p className="text-xl font-mono font-bold text-gray-900">#{shortId}</p>
+          </div>
+        )}
+
+        <p className="text-gray-500 mb-4 leading-relaxed text-sm">
+          Thank you for your order! Your ghee will be dispatched within 24 hours.
         </p>
+
+        <div className="flex items-center justify-center gap-2 text-sm text-primary-600 bg-primary-50 rounded-lg px-4 py-3 mb-8">
+          <Mail className="w-4 h-4" />
+          <span>A confirmation email with your invoice has been sent.</span>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/products">
@@ -55,5 +72,13 @@ export default function OrderSuccessPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
